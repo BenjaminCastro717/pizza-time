@@ -2,13 +2,6 @@
 CODIGO A COMPLETAR
 */
 
-function calculatePrice({
-  nPepperonis,
-  nBasils,
-  nMushrooms,
-  hasSauce,
-  hasCheese
-}) {
   /*
   Escribir una función calculatePrice que recibe los parámetros
   nPepperonis, nBasils, nMushrooms, hasSauce y hasCheese (los primeros 
@@ -23,15 +16,37 @@ function calculatePrice({
   // if / else if / else
   // Operaciones matemáticas
   // Retornar número
-}
 
-function displayInvoice({
+// Funcion Parte 1 Calcular Precio:
+function calculatePrice({
   nPepperonis,
   nBasils,
   nMushrooms,
   hasSauce,
   hasCheese
 }) {
+  const BASE = 5;
+  const PRICE_PEPPERONI = 0.5;
+  const PRICE_BASIL = 0.3;
+  const PRICE_MUSHROOM = 0.1;
+  const PRICE_SAUCE = 1;
+  const PRICE_CHEESE = 1.5;
+
+  // Asegurar números válidos
+  const p = Number(nPepperonis) || 0;
+  const b = Number(nBasils) || 0;
+  const m = Number(nMushrooms) || 0;
+
+  let total = BASE + p * PRICE_PEPPERONI + b * PRICE_BASIL + m * PRICE_MUSHROOM;
+  if (hasSauce) total += PRICE_SAUCE;
+  if (hasCheese) total += PRICE_CHEESE;
+
+  // Retornar total
+  return total;
+}
+
+
+// Funcion Parte 2 Mostrar boleta y precio:
   /*
   Escribir una funcion displayInvoice para mostrar un resumen de los ingredientes elegidos 
   y que incluya el precio total (utilizar función calculatePrice). Se recomienda agregar 
@@ -43,7 +58,75 @@ function displayInvoice({
   // document.createTextNode(...);
   // elem.appendChild(...);
   // No es necesario retornar algo
+
+//Funcion Parte 2:
+function displayInvoice({
+  nPepperonis,
+  nBasils,
+  nMushrooms,
+  hasSauce,
+  hasCheese
+}) {
+  const container = document.getElementById("order-summary");
+  container.innerHTML = "";
+
+  // Recuadro tipo boleta
+  const invoiceBox = document.createElement("div");
+  invoiceBox.className = "invoice";
+
+  const list = document.createElement("ul");
+
+  const addItem = (label, qty, unitPrice) => {
+    if (qty > 0) {
+      const li = document.createElement("li");
+      const subtotal = qty * unitPrice;
+      const text = document.createTextNode(
+        `${label}: ${qty} × ${unitPrice.toFixed(2)} = ${subtotal.toFixed(2)}`
+      );
+      li.appendChild(text);
+      list.appendChild(li);
+    }
+  };
+
+  addItem("Pepperoni", Number(nPepperonis) || 0, 0.5);
+  addItem("Albahaca", Number(nBasils) || 0, 0.3);
+  addItem("Champiñón", Number(nMushrooms) || 0, 0.1);
+
+  if (hasSauce) {
+    const li = document.createElement("li");
+    li.appendChild(document.createTextNode("Salsa: 1.00"));
+    list.appendChild(li);
+  }
+  if (hasCheese) {
+    const li = document.createElement("li");
+    li.appendChild(document.createTextNode("Queso: 1.50"));
+    list.appendChild(li);
+  }
+
+  const baseP = document.createElement("p");
+  baseP.textContent = "Base pizza: 5.00";
+
+  const total = calculatePrice({
+    nPepperonis,
+    nBasils,
+    nMushrooms,
+    hasSauce,
+    hasCheese
+  });
+
+  const totalP = document.createElement("p");
+  totalP.className = "total";
+  totalP.textContent = `Total: ${total.toFixed(2)}`;
+
+  // Orden de la boleta
+  invoiceBox.appendChild(baseP);
+  invoiceBox.appendChild(list);
+  invoiceBox.appendChild(totalP);
+
+  // Insertar la boleta completa al contenedor
+  container.appendChild(invoiceBox);
 }
+
 
 /*
 CODIGO BASE (pueden leerlo)
